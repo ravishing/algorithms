@@ -33,13 +33,65 @@ function BST() {
         }
     }
 
+    function preOrder(node, callback) {
+        if (node !== null) {
+            callback && callback(node.key);
+            preOrder(root.left, callback);
+            preOrder(root.right, callback);
+        }
+    }
+
+    function postOrder(node, callback) {
+        if (node !== null) {
+            postOrder(node.left, callback);
+            postOrder(node.right, callback);
+            callback && callback(node.key);
+        }
+    }
+
+    function findMin(node, root) {
+        return node !== null ? root : findMin(node.left, node);
+    }
+
+    function remove(node, key) {
+        if (node === null) {
+            return null;
+        }
+        if (key < node.key) {
+            return remove(node.left, key);
+        }
+        if (key > node.key) {
+            return remove(node.right, key);
+        }
+        if (node.left !== null && node.right !== null) {
+            var min = findMin(node.right.left, node.right);
+            node.key = min.key;
+            return remove(node.right, node.key);
+        }
+        if (node.left === null) {
+            return node.right;
+        }
+        if (node.right === null) {
+            return node.left;
+        }
+    }
+
     var root = null;
     return {
         insert: function(x) {
             return root === null ? (root = Node(x), 0) : insert(root, x);
         },
         inOrder: function(callback) {
-            inOrder(root,callback);
+            inOrder(root, callback);
+        },
+        postOrder: function(callback) {
+            postOrder(root, callback);
+        },
+        preOrder: function(callback) {
+            preOrder(root, callback);
+        },
+        remove: function(key) {
+            remove(root, key);
         }
     }
 }
